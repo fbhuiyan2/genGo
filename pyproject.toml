@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "gengo"
+version = "0.5.0"
+description = "Generate graphene oxide structures with periodic boundary conditions and multi-layer support"
+authors = []
+license = "GPL-3.0"
+packages = [{include = "gengo", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+ase = "^3.23"
+numpy = ">=1.24"
+scipy = ">=1.10"
+
+[tool.poetry.scripts]
+gengo = "gengo.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
