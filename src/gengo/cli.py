@@ -19,9 +19,10 @@ def _add_format_arg(parser: argparse.ArgumentParser):
     """Add --format argument to a parser."""
     parser.add_argument(
         "--format", "-f", type=str, default=None,
-        help="ASE file format string (e.g., pdb, xyz, extxyz, lammps-data, cif). "
-             "If not specified, inferred from file extension. "
-             "Note: for .lmp files, use --format lammps-data."
+        help="Output file format as supported by ASE (e.g., pdb, xyz, extxyz, lammps-data, cif). "
+             "If not specified, inferred from output file extension. "
+             "Note: for lammps data format, use --format lammps-data/lmp/lmp-atomic/lmp-charge/lmp-full. "
+             "lammps-data/lmp defaults to atomic style."
     )
 
 
@@ -81,6 +82,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--OH", type=int, default=0,
         help="Number of hydroxyl groups (basal plane)"
     )
+    go_parser.add_argument(
+        "--max-try", type=int, default=50,
+        help="Maximum placement attempts per functional group (default: 50)"
+    )
     _add_format_arg(go_parser)
     _add_periodic_arg(go_parser)
 
@@ -130,7 +135,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--OH", type=int, default=0,
         help="Number of OH groups to hypothetically add"
     )
-    _add_format_arg(calc_parser)
 
     return parser
 
@@ -185,6 +189,7 @@ def cmd_go(args):
         n_epoxy=args.COC,  # epoxy / C-O-C bridge
         n_oh=args.OH,
         periodic=args.periodic,
+        max_attempts=args.max_try,
     )
 
     write_structure(args.output, atoms, format=args.format)

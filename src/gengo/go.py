@@ -423,7 +423,7 @@ def _pick_spatially_distributed(candidates: list, atoms: Atoms,
 
 
 def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
-              periodic: bool = False) -> Atoms:
+              periodic: bool = False, max_attempts: int = 50) -> Atoms:
     """Create graphene oxide by adding functional groups to pristine graphene.
 
     Parameters
@@ -438,6 +438,8 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
         Number of hydroxyl (-OH) groups to add. Placed on basal plane.
     periodic : bool
         Whether to use periodic boundary conditions for distance checks.
+    max_attempts : int
+        Maximum number of placement attempts per functional group (default: 50).
 
     Returns
     -------
@@ -563,7 +565,7 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
                 layer_candidates = all_edge
 
             success = False
-            for attempt in range(MAX_ATTEMPTS):
+            for attempt in range(max_attempts):
                 idx = _pick_spatially_distributed(
                     layer_candidates, atoms, fg_positions, MIN_SPACING)
                 if idx is None:
@@ -583,7 +585,7 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
                     break
 
             if not success:
-                print(f"\n  Warning: Could not place COOH after {MAX_ATTEMPTS} attempts. "
+                print(f"\n  Warning: Could not place COOH after {max_attempts} attempts. "
                       f"Stopping COOH placement ({n_cooh} remaining).")
                 n_cooh = 0
                 total = n_cooh + n_epoxy + n_oh
@@ -614,7 +616,7 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
                 layer_candidates = all_avail
 
             success = False
-            for attempt in range(MAX_ATTEMPTS):
+            for attempt in range(max_attempts):
                 idx = _pick_spatially_distributed(
                     layer_candidates, atoms, fg_positions, MIN_SPACING)
                 if idx is None:
@@ -634,7 +636,7 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
                     break
 
             if not success:
-                print(f"\n  Warning: Could not place epoxy after {MAX_ATTEMPTS} attempts. "
+                print(f"\n  Warning: Could not place epoxy after {max_attempts} attempts. "
                       f"Stopping epoxy placement ({n_epoxy} remaining).")
                 n_epoxy = 0
                 total = n_cooh + n_epoxy + n_oh
@@ -665,7 +667,7 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
                 layer_candidates = all_avail
 
             success = False
-            for attempt in range(MAX_ATTEMPTS):
+            for attempt in range(max_attempts):
                 idx = _pick_spatially_distributed(
                     layer_candidates, atoms, fg_positions, MIN_SPACING)
                 if idx is None:
@@ -685,7 +687,7 @@ def create_go(atoms: Atoms, n_cooh: int, n_epoxy: int, n_oh: int,
                     break
 
             if not success:
-                print(f"\n  Warning: Could not place OH after {MAX_ATTEMPTS} attempts. "
+                print(f"\n  Warning: Could not place OH after {max_attempts} attempts. "
                       f"Stopping OH placement ({n_oh} remaining).")
                 n_oh = 0
                 total = n_cooh + n_epoxy + n_oh
